@@ -32,12 +32,12 @@ jobs:
         node-version: [20.2.x]
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Download Service Graph
         uses: actions/download-artifact@v3
         with:
           name: graph
-
-      - uses: actions/checkout@v2
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
