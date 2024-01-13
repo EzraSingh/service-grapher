@@ -2,7 +2,7 @@ name: Node.js CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
     branches: [main]
 
@@ -10,6 +10,7 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Compile Jsonnet Config
         uses: alexdglover/jsonnet-render@v2
         with:
@@ -35,6 +36,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: graph
+
       - uses: actions/checkout@v2
 
       - name: Install Vercel CLI
