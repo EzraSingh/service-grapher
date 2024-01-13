@@ -1,5 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
+import config from "@/graph.json";
 
 const Graph = dynamic(
   () => import("@/components/Graph").then((mod) => mod.Graph),
@@ -11,8 +12,8 @@ interface StaticProps {
 }
 
 export const getStaticProps: GetStaticProps<StaticProps> = async () => {
-  //const manifestPath = `${process.cwd()}/manifest.jsonnet`;
-  return { props: { graph: [] } };
+  const { graph } = config;
+  return { props: { graph } };
 };
 
 export default function Home({

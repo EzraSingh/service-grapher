@@ -23,14 +23,14 @@ export function compileGraph(resources: ResourceType[]): GraphData<any, any> {
     const y = r * Math.sin(theta) + s[1];
     return [x, y];
   }
-  const [root] = resources.filter((r) => r.group === ResourceGroups.Org);
+  const [root] = resources.filter((r) => r.group === 0);
   const nodes = resources.reduce<{ id: string; fx?: number; fy?: number }[]>(
     (n, r, i) => {
       const [s, t0] = DISPLACEMENT;
       const offset = (i + (1 % (r.group + 1))) * 20; // ? a rolling index, scaled by some constant; since order dosnt mattter
       const position = alongRadialPath(s, r.group * t0); // ? general location
       const [fx, fy] =
-        r.group !== ResourceGroups.Org
+        r.group !== 0
           ? displacePoint(offset, toRadians(offset * 3), position) // ? prevents overlapping nodes of same group
           : [x0, y0]; // ? Center only the root
       const mainNode = { id: r.key, fx, fy };
