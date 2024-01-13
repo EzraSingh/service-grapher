@@ -38,6 +38,9 @@ jobs:
         with:
           name: graph
 
+      - name: Install Yarn
+        run: npm install -g yarn
+
       - name: Deploy to Vercel Action
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
