@@ -1,0 +1,50 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Compile Jsonnet Config
+        uses: alexdglover/jsonnet-render@v2
+        with:
+          file: graph.jsonnet
+          output_file: graph.json
+
+      - name: Upload Service Graph
+        uses: actions/upload-artifact@v3
+        with:
+          name: graph
+          path: graph.json
+          retention-days: 5
+
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.2.x]
+
+    steps:
+      - name: Download Service Graph
+        uses: actions/download-artifact@v3
+        with:
+          name: graph
+      - uses: actions/checkout@v2
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build Project Artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy Project Artifacts to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
