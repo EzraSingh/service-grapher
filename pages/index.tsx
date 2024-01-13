@@ -1,6 +1,7 @@
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import dynamic from "next/dynamic";
 import config from "@/graph.json";
+import "@/app/globals.css";
 
 const Graph = dynamic(
   () => import("@/components/Graph").then((mod) => mod.Graph),
@@ -20,7 +21,7 @@ export default function Home({
   graph,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
-    <main className="overflow-hidden">
+    <main className="max-h-screen max-w-screen">
       <Graph resources={graph} />
     </main>
   );
