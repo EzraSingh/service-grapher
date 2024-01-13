@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Service Grapher Deployment
 
 on:
   push:
@@ -10,7 +10,10 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     steps:
-      - name: Compile Jsonnet Config
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Compile Jsonnet
         uses: alexdglover/jsonnet-render@v2
         with:
           file: graph.jsonnet
@@ -23,28 +26,28 @@ jobs:
           path: graph.json
           retention-days: 5
 
-  build:
+  deploy:
+    needs: [prepare]
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.2.x]
-
+    permissions:
+      pull-requests: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download Service Graph
         uses: actions/download-artifact@v3
         with:
           name: graph
-      - uses: actions/checkout@v2
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Install Yarn
+        run: npm install -g yarn
 
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ github.token }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          GITHUB_DEPLOYMENT: false
