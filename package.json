@@ -9,7 +9,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "configure": "jsonnet graph.jsonnet -o graph.json"
   },
   "dependencies": {
     "d3": "5.5.0",
@@ -25,6 +26,7 @@
     "@types/react-d3-graph": "^2.6.7",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
+    "csstype": "^3.1.3",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",
     "postcss": "^8",
