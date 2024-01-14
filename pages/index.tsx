@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { GraphSchema, compileGraph } from "@/app/helpers/graph";
 
 import "@/app/globals.css";
-import config from "../graph.json";
+import config from "@/graph.json";
 
 // ? see lib/sdk.libsonnet
 export enum ResourceGroup {
